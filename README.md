@@ -23,7 +23,7 @@ persistencia MySQL y migraciones con Flyway.
 4. Levantar aplicacion:
 	- mvnw.cmd spring-boot:run
 
-## Validacion de migraciones (Paso 5)
+## Validacion de migraciones 
 
 Se agrego una prueba de integracion que arranca un MySQL vacio con
 Testcontainers y verifica que Flyway:
@@ -35,7 +35,7 @@ Testcontainers y verifica que Flyway:
 Archivo de prueba:
 - prueba/src/test/java/com/prueba_tecnica_nicola/prueba/infrastructure/database/FlywayMigrationIntegrationTest.java
 
-## Criterios que espera un entrevistador
+## Criterios 
 
 - Migraciones versionadas y repetibles desde cero
 - ddl-auto=validate para evitar drift entre entidad y esquema
