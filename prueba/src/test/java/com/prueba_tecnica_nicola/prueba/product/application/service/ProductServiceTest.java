@@ -83,4 +83,31 @@ class ProductServiceTest {
         ProductNotFoundException ex = assertThrows(ProductNotFoundException.class, () -> service.deleteProduct(123L));
         assertEquals("Producto con id 123 no encontrado", ex.getMessage());
     }
+
+    @Test
+    void createProduct_nameTooLong_throwsBadRequest() {
+        String longName = "A".repeat(151);
+        Product input = new Product(null, longName, "desc", new BigDecimal("1.00"), 1, null, null);
+
+        InvalidProductException ex = assertThrows(InvalidProductException.class, () -> service.createProduct(input));
+        assertEquals("name debe tener maximo 150 caracteres", ex.getMessage());
+    }
+
+    @Test
+    void createProduct_nullProduct_throwsBadRequest() {
+        InvalidProductException ex = assertThrows(InvalidProductException.class, () -> service.createProduct(null));
+        assertEquals("El producto es obligatorio", ex.getMessage());
+    }
+
+    @Test
+    void getAllProducts_negativePage_throwsBadRequest() {
+        InvalidProductException ex = assertThrows(InvalidProductException.class, () -> service.getAllProducts(-1, 20));
+        assertEquals("page debe ser >= 0", ex.getMessage());
+    }
+
+    @Test
+    void getAllProducts_invalidSize_throwsBadRequest() {
+        InvalidProductException ex = assertThrows(InvalidProductException.class, () -> service.getAllProducts(0, 0));
+        assertEquals("size debe ser > 0", ex.getMessage());
+    }
 }

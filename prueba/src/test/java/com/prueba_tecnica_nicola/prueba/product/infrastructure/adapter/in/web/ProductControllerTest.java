@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prueba_tecnica_nicola.prueba.common.infrastructure.exception.GlobalExceptionHandler;
 import com.prueba_tecnica_nicola.prueba.product.application.port.in.ProductServicePort;
 import com.prueba_tecnica_nicola.prueba.product.domain.Product;
+import com.prueba_tecnica_nicola.prueba.product.domain.exception.InvalidProductException;
 import com.prueba_tecnica_nicola.prueba.product.domain.exception.ProductNotFoundException;
 import com.prueba_tecnica_nicola.prueba.product.infrastructure.adapter.in.web.mapper.ProductWebMapper;
 import org.junit.jupiter.api.Test;
@@ -183,5 +184,91 @@ class ProductControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.status").value(400))
             .andExpect(jsonPath("$.message").value("Error de validacion"));
+    }
+
+    @Test
+    void updateProduct_withInvalidBody_returns400() throws Exception {
+        String request = """
+            {
+              "name": "",
+              "description": "X",
+              "price": 0,
+              "stock": -1
+            }
+            """;
+
+        mockMvc.perform(put("/api/products/{id}", 3L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.message").value("Error de validacion"));
+    }
+
+    @Test
+    void getAllProducts_withInvalidPage_returns400() throws Exception {
+        doThrow(new InvalidProductException("page debe ser >= 0"))
+            .when(productService).getAllProducts(-1, 20);
+
+        mockMvc.perform(get("/api/products")
+                .param("page", "-1")
+                .param("size", "20"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.message").value("page debe ser >= 0"));
+    }
+
+    @Test
+    void getAllProducts_withInvalidSize_returns400() throws Exception {
+        doThrow(new InvalidProductException("size debe ser > 0"))
+            .when(productService).getAllProducts(0, 0);
+
+        mockMvc.perform(get("/api/products")
+                .param("page", "0")
+                .param("size", "0"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.message").value("size debe ser > 0"));
+    }
+
+    @Test
+    void getProductById_withInvalidPathType_returns400() throws Exception {
+        mockMvc.perform(get("/api/products/{id}", "abc"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.message").value("El parametro id tiene un formato invalido"));
+    }
+
+    @Test
+    void createProduct_withMalformedJson_returns400() throws Exception {
+        String request = "{ \"name\": \"Mouse\", \"price\": }";
+
+        mockMvc.perform(post("/api/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.message").value("Body JSON invalido"));
+    }
+
+    @Test
+    void createProduct_withUnexpectedError_returns500() throws Exception {
+        doThrow(new RuntimeException("boom")).when(productService).createProduct(any(Product.class));
+
+        String request = """
+            {
+              "name": "Mouse",
+              "description": "Gaming",
+              "price": 49.90,
+              "stock": 10
+            }
+            """;
+
+        mockMvc.perform(post("/api/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request))
+            .andExpect(status().isInternalServerError())
+            .andExpect(jsonPath("$.status").value(500))
+            .andExpect(jsonPath("$.message").value("Error interno del servidor"));
     }
 }
