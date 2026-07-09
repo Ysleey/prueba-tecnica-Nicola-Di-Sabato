@@ -130,11 +130,15 @@ Incluye:
 - tests de controlador
 - test de integracion de migraciones Flyway sobre MySQL vacio
 
-## Pruebas manuales (Postman o curl)
+## Pruebas manuales
 
-Pack de Postman listo para importar:
+**Opción 1: Postman (recomendado)**
+
+Colección lista para importar:
 - `prueba/postman/PruebaTecnica.postman_collection.json`
 - `prueba/postman/PruebaTecnica.local.postman_environment.json`
+
+Importar ambos archivos en Postman y ejecutar:
 
 ### Evidencias visuales (Postman)
 
@@ -144,65 +148,85 @@ Ejecucion del runner con requests y tests en verde:
 
 ![Evidencia Postman 2](prueba/docs/evidencias/postman/Captura2.PNG)
 
-Base URL:
-```text
-http://localhost:8080/api/products
-```
+**Opción 2: PowerShell (Windows nativo)**
 
-1. Crear producto (201):
-```bash
-curl -X POST http://localhost:8080/api/products \
-  -H "Content-Type: application/json" \
-  -d "{\"name\":\"Teclado\",\"description\":\"Mecanico\",\"price\":99.90,\"stock\":8}"
-```
-
-2. Listar productos (200):
-```bash
-curl "http://localhost:8080/api/products?page=0&size=20"
-```
-
-3. Consultar por id existente (200):
-```bash
-curl "http://localhost:8080/api/products/1"
-```
-
-4. Actualizar producto (200):
-```bash
-curl -X PUT http://localhost:8080/api/products/1 \
-  -H "Content-Type: application/json" \
-  -d "{\"name\":\"Teclado Pro\",\"description\":\"Mecanico RGB\",\"price\":109.90,\"stock\":10}"
-```
-
-5. Eliminar producto (204):
-```bash
-curl -X DELETE http://localhost:8080/api/products/1
-```
-
-6. Caso de error de validacion (400):
-```bash
-curl -X POST http://localhost:8080/api/products \
-  -H "Content-Type: application/json" \
-  -d "{\"name\":\"\",\"price\":0,\"stock\":-1}"
-```
-
-## Migraciones desde cero
-
-La aplicacion usa Flyway y `ddl-auto=validate` para asegurar consistencia entre
-modelo y base de datos. La migracion actual crea la tabla `product`.
-
-Ademas hay un test de integracion que valida migracion sobre esquema vacio:
-- `prueba/src/test/java/com/prueba_tecnica_nicola/prueba/infrastructure/database/FlywayMigrationIntegrationTest.java`
-
-Guia manual paso a paso para repetir la prueba de Flyway por tu cuenta:
-- `prueba/GUIA_FLYWAY_PASO_A_PASO.md`
-
-## Script de verificacion rapida
-
-Para validar todo antes de una demo:
+Ejecutar desde `prueba/` cualquiera de estos comandos:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\prueba\scripts\verificacion-entrevista.ps1
+# 1. Crear producto (201)
+$body = @{name='Teclado'; description='Mecanico'; price=99.90; stock=8} | ConvertTo-Json
+Invoke-WebRequest -Uri "http://localhost:8080/api/products" -Method POST -Body $body -ContentType "application/json"
+
+# 2. Listar productos (200)
+Invoke-WebRequest -Uri "http://localhost:8080/api/products?page=0&size=20" -Method GET
+
+# 3. Consultar por id (200)
+Invoke-WebRequest -Uri "http://localhost:8080/api/products/1" -Method GET
+
+# 4. Actualizar producto (200)
+$body = @{name='Teclado Pro'; description='Mecanico RGB'; price=109.90; stock=10} | ConvertTo-Json
+Invoke-WebRequest -Uri "http://localhost:8080/api/products/1" -Method PUT -Body $body -ContentType "application/json"
+
+# 5. Eliminar producto (204)
+Invoke-WebRequest -Uri "http://localhost:8080/api/products/1" -Method DELETE
+
+# 6. Error de validacion (400)
+$body = @{name=''; price=0; stock=-1} | ConvertTo-Json
+Invoke-WebRequest -Uri "http://localhost:8080/api/products" -Method POST -Body $body -ContentType "application/json"
 ```
+
+**Opción 3: REST Client (VS Code)**
+
+Instalar extensión `REST Client` de Huachao Mao.
+Crear archivo `test.http` con:
+
+```http
+@host = http://localhost:8080
+@contentType = application/json
+
+### 1. Crear producto
+POST {{host}}/api/products
+Content-Type: {{contentType}}
+
+{
+  "name": "Teclado",
+  "description": "Mecanico",
+  "price": 99.90,
+  "stock": 8
+}
+
+### 2. Listar productos
+GET {{host}}/api/products?page=0&size=20
+
+### 3. Consultar por id
+GET {{host}}/api/products/1
+
+### 4. Actualizar
+PUT {{host}}/api/products/1
+Content-Type: {{contentType}}
+
+{
+  "name": "Teclado Pro",
+  "description": "Mecanico RGB",
+  "price": 109.90,
+  "stock": 10
+}
+
+### 5. Eliminar
+DELETE {{host}}/api/products/1
+
+### 6. Error validacion
+POST {{host}}/api/products
+Content-Type: {{contentType}}
+
+{
+  "name": "",
+  "price": 0,
+  "stock": -1
+}
+```
+
+Luego hacer clic en "Send Request" arriba de cada bloque.
 
 ## Guia de entrevista
 
