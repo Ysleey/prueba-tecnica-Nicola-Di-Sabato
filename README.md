@@ -70,6 +70,10 @@ Incluye:
 
 ## Pruebas manuales (Postman o curl)
 
+Pack de Postman listo para importar:
+- `prueba/postman/PruebaTecnica.postman_collection.json`
+- `prueba/postman/PruebaTecnica.local.postman_environment.json`
+
 Base URL:
 ```text
 http://localhost:8080/api/products
@@ -118,6 +122,9 @@ modelo y base de datos. La migracion actual crea la tabla `product`.
 
 Ademas hay un test de integracion que valida migracion sobre esquema vacio:
 - `prueba/src/test/java/com/prueba_tecnica_nicola/prueba/infrastructure/database/FlywayMigrationIntegrationTest.java`
+
+Guia manual paso a paso para repetir la prueba de Flyway por tu cuenta:
+- `prueba/GUIA_FLYWAY_PASO_A_PASO.md`
 
 ## Script de verificacion rapida
 
