@@ -98,23 +98,6 @@ DESCRIBE product;
 Resultado esperado:
 - columnas: id, name, description, price, stock, created_at, updated_at
 
-## Como se cubren los criterios de evaluacion
-
-1. ¿La API funciona segun lo pedido?
-- Se valida con runner Postman completo (CRUD + escenarios de error).
-
-2. ¿El codigo esta organizado y es legible?
-- Estructura por capas y separacion de responsabilidades (dominio, aplicacion, adaptadores).
-
-3. ¿Las migraciones corren limpias desde cero contra MySQL vacia?
-- Evidencia automatica (test de integracion Flyway) + evidencia manual (consultas SQL).
-
-4. ¿Los tests unitarios son significativos?
-- Hay pruebas de servicio (reglas de negocio), controlador (contrato HTTP) e integracion de migraciones.
-
-5. ¿Manejo de errores razonable?
-- Se validan respuestas controladas para 400, 404 y 500, no solo camino feliz.
-
 ## Alcance y fuera de alcance
 
 Incluido:
@@ -130,6 +113,3 @@ Fuera de alcance (segun enunciado):
 - Deploy remoto
 - Documentacion exhaustiva
 
-## Cierre breve para evaluador
-
-La solucion es ejecutable en local, validable de punta a punta y con evidencia reproducible para funcionalidad, calidad de codigo, migraciones y pruebas.
