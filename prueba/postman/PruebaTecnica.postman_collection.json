@@ -11,7 +11,7 @@
     },
     {
       "key": "productId",
-      "value": "1"
+      "value": ""
     }
   ],
   "item": [
@@ -49,7 +49,8 @@
               "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
               "var body = pm.response.json();",
               "pm.test('Tiene id', function () { pm.expect(body.id).to.exist; });",
-              "pm.collectionVariables.set('productId', body.id);"
+              "pm.collectionVariables.set('productId', String(body.id));",
+              "if (pm.environment) { pm.environment.set('productId', String(body.id)); }"
             ]
           }
         }

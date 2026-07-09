@@ -46,6 +46,8 @@ public class ProductPersistenceAdapter implements ProductRepositoryPort {
         entity.setDescription(product.description());
         entity.setPrice(product.price());
         entity.setStock(product.stock());
+        entity.setCreatedAt(product.createdAt());
+        entity.setUpdatedAt(product.updatedAt());
         return entity;
     }
      @Override

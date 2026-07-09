@@ -76,35 +76,3 @@
 ## Cierre recomendado
 
 "Con esta implementacion busque equilibrio entre funcionalidad, mantenibilidad y buenas practicas. No solo hice que el CRUD funcione: tambien cuide el diseño, el contrato HTTP, la estrategia de errores y la reproducibilidad de base de datos."
-
-## 10 preguntas extra que me pueden hacer
-
-1. ¿Por que usar record para DTOs y modelo?
-   - "Porque reduce boilerplate y hace mas claro que son objetos inmutables de transporte/lectura."
-
-2. ¿Por que no usaste una sola capa sin puertos?
-   - "Porque con puertos separo reglas de negocio de detalles tecnicos y me queda mas facil cambiar infraestructura sin tocar dominio."
-
-3. ¿Como evitaste respuestas inconsistentes en errores?
-   - "Centralice todo en un handler global para devolver siempre el mismo formato de error."
-
-4. ¿Que garantiza que la paginacion no rompa?
-   - "Valido `page` y `size` y tengo tests para casos invalidos y para estructura de respuesta paginada."
-
-5. ¿Como validas que el contrato HTTP sigue estable?
-   - "Con tests de controlador y con el pack de Postman, que incluye asserts de status y campos esperados."
-
-6. ¿Por que MySQL y no H2?
-   - "Porque el enunciado pide MySQL y quise validar el comportamiento real del motor que se usa en evaluacion."
-
-7. ¿Que pasa si una migracion falla en medio de despliegue local?
-   - "Flyway marca el estado en su historial. Yo reviso la tabla de historial, corrijo la migracion y repito desde entorno limpio si hace falta."
-
-8. ¿Por que no incluiste seguridad?
-   - "Porque estaba explicitamente fuera de alcance. Priorice cumplir bien CRUD, errores, tests y migraciones."
-
-9. ¿Que evidencia muestras de que hay pruebas significativas?
-   - "Muestro tests de negocio, de contrato HTTP y de migraciones desde cero; no son pruebas de humo vacias."
-
-10. ¿Como defenderias que la app esta lista para entregar?
-   - "Porque cumple requisitos funcionales, maneja errores razonables, tiene migraciones reproducibles y pruebas en verde con evidencia."
