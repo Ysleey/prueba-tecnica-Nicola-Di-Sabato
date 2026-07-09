@@ -2,6 +2,9 @@
 
 API CRUD de productos (solo backend) con Java 17, Spring Boot, MySQL y Flyway.
 
+Documento resumido para evaluador:
+- `DOCUMENTO_ENTREGA_EVALUADOR.md`
+
 ## Objetivo
 
 Implementar una API REST que permita crear, consultar, actualizar y eliminar productos,
@@ -17,6 +20,65 @@ con validaciones, manejo de errores y migraciones reproducibles desde cero.
 - Flyway
 - MySQL 8
 - JUnit 5, Mockito, MockMvc, Testcontainers
+
+## Estructura del proyecto
+
+```text
+.
+├── docker-compose.yml
+├── DOCUMENTO_ENTREGA_EVALUADOR.md
+├── README.md
+└── prueba/
+  ├── pom.xml
+  ├── mvnw
+  ├── mvnw.cmd
+  ├── GUIA_ENTREVISTA.md
+  ├── GUIA_FLYWAY_PASO_A_PASO.md
+  ├── postman/
+  │   ├── PruebaTecnica.postman_collection.json
+  │   └── PruebaTecnica.local.postman_environment.json
+  ├── scripts/
+  │   └── verificacion-entrevista.ps1
+  └── src/
+    ├── main/
+    │   ├── java/com/prueba_tecnica_nicola/prueba/
+    │   │   ├── PruebaApplication.java
+    │   │   ├── common/
+    │   │   │   └── infrastructure/
+    │   │   │       ├── config/
+    │   │   │       └── exception/
+    │   │   └── product/
+    │   │       ├── domain/
+    │   │       ├── application/
+    │   │       │   ├── port/in/
+    │   │       │   ├── port/out/
+    │   │       │   └── service/
+    │   │       └── infrastructure/
+    │   │           ├── adapter/in/web/
+    │   │           └── adapter/out/persistence/
+    │   └── resources/
+    │       ├── application.properties
+    │       └── db/migration/
+    │           └── V1__create_product_table.sql
+    └── test/
+      └── java/com/prueba_tecnica_nicola/prueba/
+        ├── product/application/service/
+        ├── product/infrastructure/adapter/in/web/
+        └── infrastructure/database/
+```
+
+### Mapa rapido de responsabilidades
+
+| Carpeta | Rol principal |
+|---|---|
+| `product/domain` | Modelo de dominio y excepciones de negocio |
+| `product/application/port` | Contratos de entrada y salida (hexagonal) |
+| `product/application/service` | Casos de uso y reglas de negocio |
+| `product/infrastructure/adapter/in/web` | API REST, DTOs y mapeo web |
+| `product/infrastructure/adapter/out/persistence` | Persistencia JPA y mapeo dominio-entidad |
+| `common/infrastructure/exception` | Manejo global y formato uniforme de errores |
+| `resources/db/migration` | Versionado de esquema con Flyway |
+| `src/test` | Pruebas unitarias, de contrato HTTP e integración |
 
 ## Alcance de la prueba
 
@@ -73,6 +135,9 @@ Incluye:
 Pack de Postman listo para importar:
 - `prueba/postman/PruebaTecnica.postman_collection.json`
 - `prueba/postman/PruebaTecnica.local.postman_environment.json`
+
+Evidencias visuales de ejecucion:
+- [Guia de evidencias Postman](prueba/docs/evidencias/postman/README.md)
 
 Base URL:
 ```text
@@ -138,3 +203,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\prueba\scripts\verificacio
 
 Para checklist final, guion y simulacion:
 - `prueba/GUIA_ENTREVISTA.md`
+
+## Puntos de entrada para revision rapida
+
+| Criterio de evaluacion | Archivo recomendado |
+|---|---|
+| API y endpoints CRUD | [ProductController](prueba/src/main/java/com/prueba_tecnica_nicola/prueba/product/infrastructure/adapter/in/web/ProductController.java) |
+| Reglas de negocio | [ProductService](prueba/src/main/java/com/prueba_tecnica_nicola/prueba/product/application/service/ProductService.java) |
+| Manejo de errores | [GlobalExceptionHandler](prueba/src/main/java/com/prueba_tecnica_nicola/prueba/common/infrastructure/exception/GlobalExceptionHandler.java) |
+| Migracion de esquema | [V1__create_product_table.sql](prueba/src/main/resources/db/migration/V1__create_product_table.sql) |
+| Configuracion datasource y Flyway | [application.properties](prueba/src/main/resources/application.properties) |
+| Pruebas de servicio | [ProductServiceTest](prueba/src/test/java/com/prueba_tecnica_nicola/prueba/product/application/service/ProductServiceTest.java) |
+| Pruebas de contrato HTTP | [ProductControllerTest](prueba/src/test/java/com/prueba_tecnica_nicola/prueba/product/infrastructure/adapter/in/web/ProductControllerTest.java) |
+| Prueba de migracion Flyway | [FlywayMigrationIntegrationTest](prueba/src/test/java/com/prueba_tecnica_nicola/prueba/infrastructure/database/FlywayMigrationIntegrationTest.java) |
+| Ejecucion manual API | [Coleccion Postman](prueba/postman/PruebaTecnica.postman_collection.json) |
+| Ejecucion local completa | [Documento de entrega](DOCUMENTO_ENTREGA_EVALUADOR.md) |
