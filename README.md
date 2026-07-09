@@ -136,8 +136,13 @@ Pack de Postman listo para importar:
 - `prueba/postman/PruebaTecnica.postman_collection.json`
 - `prueba/postman/PruebaTecnica.local.postman_environment.json`
 
-Evidencias visuales de ejecucion:
-- [Guia de evidencias Postman](prueba/docs/evidencias/postman/README.md)
+### Evidencias visuales (Postman)
+
+Ejecucion del runner con requests y tests en verde:
+
+![Evidencia Postman 1](prueba/docs/evidencias/postman/Captura.PNG)
+
+![Evidencia Postman 2](prueba/docs/evidencias/postman/Captura2.PNG)
 
 Base URL:
 ```text
@@ -203,18 +208,3 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\prueba\scripts\verificacio
 
 Para checklist final, guion y simulacion:
 - `prueba/GUIA_ENTREVISTA.md`
-
-## Puntos de entrada para revision rapida
-
-| Criterio de evaluacion | Archivo recomendado |
-|---|---|
-| API y endpoints CRUD | [ProductController](prueba/src/main/java/com/prueba_tecnica_nicola/prueba/product/infrastructure/adapter/in/web/ProductController.java) |
-| Reglas de negocio | [ProductService](prueba/src/main/java/com/prueba_tecnica_nicola/prueba/product/application/service/ProductService.java) |
-| Manejo de errores | [GlobalExceptionHandler](prueba/src/main/java/com/prueba_tecnica_nicola/prueba/common/infrastructure/exception/GlobalExceptionHandler.java) |
-| Migracion de esquema | [V1__create_product_table.sql](prueba/src/main/resources/db/migration/V1__create_product_table.sql) |
-| Configuracion datasource y Flyway | [application.properties](prueba/src/main/resources/application.properties) |
-| Pruebas de servicio | [ProductServiceTest](prueba/src/test/java/com/prueba_tecnica_nicola/prueba/product/application/service/ProductServiceTest.java) |
-| Pruebas de contrato HTTP | [ProductControllerTest](prueba/src/test/java/com/prueba_tecnica_nicola/prueba/product/infrastructure/adapter/in/web/ProductControllerTest.java) |
-| Prueba de migracion Flyway | [FlywayMigrationIntegrationTest](prueba/src/test/java/com/prueba_tecnica_nicola/prueba/infrastructure/database/FlywayMigrationIntegrationTest.java) |
-| Ejecucion manual API | [Coleccion Postman](prueba/postman/PruebaTecnica.postman_collection.json) |
-| Ejecucion local completa | [Documento de entrega](DOCUMENTO_ENTREGA_EVALUADOR.md) |
