@@ -132,7 +132,7 @@ Incluye:
 
 ## Pruebas manuales
 
-**Opción 1: Postman (recomendado)**
+**Postman (recomendado)**
 
 Colección lista para importar:
 - `prueba/postman/PruebaTecnica.postman_collection.json`
@@ -148,87 +148,3 @@ Ejecucion del runner con requests y tests en verde:
 
 ![Evidencia Postman 2](prueba/docs/evidencias/postman/Captura2.PNG)
 
-**Opción 2: PowerShell (Windows nativo)**
-
-Ejecutar desde `prueba/` cualquiera de estos comandos:
-
-```powershell
-# 1. Crear producto (201)
-$body = @{name='Teclado'; description='Mecanico'; price=99.90; stock=8} | ConvertTo-Json
-Invoke-WebRequest -Uri "http://localhost:8080/api/products" -Method POST -Body $body -ContentType "application/json"
-
-# 2. Listar productos (200)
-Invoke-WebRequest -Uri "http://localhost:8080/api/products?page=0&size=20" -Method GET
-
-# 3. Consultar por id (200)
-Invoke-WebRequest -Uri "http://localhost:8080/api/products/1" -Method GET
-
-# 4. Actualizar producto (200)
-$body = @{name='Teclado Pro'; description='Mecanico RGB'; price=109.90; stock=10} | ConvertTo-Json
-Invoke-WebRequest -Uri "http://localhost:8080/api/products/1" -Method PUT -Body $body -ContentType "application/json"
-
-# 5. Eliminar producto (204)
-Invoke-WebRequest -Uri "http://localhost:8080/api/products/1" -Method DELETE
-
-# 6. Error de validacion (400)
-$body = @{name=''; price=0; stock=-1} | ConvertTo-Json
-Invoke-WebRequest -Uri "http://localhost:8080/api/products" -Method POST -Body $body -ContentType "application/json"
-```
-
-**Opción 3: REST Client (VS Code)**
-
-Instalar extensión `REST Client` de Huachao Mao.
-Crear archivo `test.http` con:
-
-```http
-@host = http://localhost:8080
-@contentType = application/json
-
-### 1. Crear producto
-POST {{host}}/api/products
-Content-Type: {{contentType}}
-
-{
-  "name": "Teclado",
-  "description": "Mecanico",
-  "price": 99.90,
-  "stock": 8
-}
-
-### 2. Listar productos
-GET {{host}}/api/products?page=0&size=20
-
-### 3. Consultar por id
-GET {{host}}/api/products/1
-
-### 4. Actualizar
-PUT {{host}}/api/products/1
-Content-Type: {{contentType}}
-
-{
-  "name": "Teclado Pro",
-  "description": "Mecanico RGB",
-  "price": 109.90,
-  "stock": 10
-}
-
-### 5. Eliminar
-DELETE {{host}}/api/products/1
-
-### 6. Error validacion
-POST {{host}}/api/products
-Content-Type: {{contentType}}
-
-{
-  "name": "",
-  "price": 0,
-  "stock": -1
-}
-```
-
-Luego hacer clic en "Send Request" arriba de cada bloque.
-
-## Guia de entrevista
-
-Para checklist final, guion y simulacion:
-- `prueba/GUIA_ENTREVISTA.md`
